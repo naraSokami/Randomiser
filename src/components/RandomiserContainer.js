@@ -1,74 +1,95 @@
-import React, { useState, useEffect } from 'react';
-import Randomiser from './Randomiser'
+import React, { useReducer, useState } from 'react';
+// import Randomiser from './Randomiser'
 
 
 // UTIL //
 
-function _item(item) {
-    return parseInt(item.replace('item_', ''))
-}
+// function _item(item) {
+//     return parseInt(item.replace('item_', ''))
+// }
 
 const itemsList = []
 for (let i = 0; i < 20; i++) {
-    itemsList.push({id: 'item_' + i, value: 'item ' + i})
+    itemsList.push({ id: 'item_' + i, value: 'item ' + i, active: false, change: false })
 }
 
-console.log(itemsList)
-const intervalTime = 150;
-const duration = 50
-let intervalId = null
+// console.log(itemsList)
+// const intervalTime = 150;
+// const duration = 50
+// let intervalId = null
 
 function RandomiserContainer() {
-
     const [items, setItems] = useState(itemsList);
-    const [currentItem, setCurrentItem] = useState(items[Math.floor(Math.random() * items.length)]);
-    const [counter, setCounter] = useState(0);
-    const [toggleEdit, setToggleEdit] = useState(false)
+    const [input, setInput] = useState("");
+    const [, forceUpdate] = useReducer(x => x + 1, 0);
+
+    // useEffect(() => {
+    //     document.getElementById(currentItem.id).classList.add("currentItem")
+    //     setCounter(prev => prev += 1)
+    //     console.log(counter)
+    //     if (counter === duration) {
+    //         clearInterval(intervalId)
+    //         setCounter(0)
+    //         document.getElementById(currentItem.id).classList.add("chosenOne")
+    //     }
+    //     return () => {
+    //         document.getElementById(currentItem.id).classList.remove("currentItem")
+    //     }
+    // }, [currentItem])
+
+    // useEffect(() => {
+    //     document.querySelectorAll('.edit input').forEach(element => {
+    //         element.addEventListener("change", ({ target }) => {
+    //             setItems(prev => {
+    //                 let item = items[_item(target.parentElement.parentElement.id)]
+    //                 item.value = target.value
+    //                 prev.splice(_item(item.id), 1, item)
+    //                 console.log(prev)
+    //                 console.log('test')
+    //                 console.log(items)
+    //                 return prev
+    //             })
+    //         })
+    //     });
+    //     return () => {
+    //         document.querySelectorAll('.edit input').forEach(element => {
+    //             element.removeEventListener("change", ({ target }) => {
+    //                 console.log(target)
+    //             })
+    //         });
+    //     }
+    // }, [items])
 
     const handleTrigger = () => {
-        document.getElementById(currentItem.id).classList.remove("chosenOne")
-        intervalId = setInterval(() => {
-            setCurrentItem(items[Math.floor(Math.random() * items.length)])
-        }, intervalTime)
+        let liste = [...items]
+        for (let a = 0; a < 40; a++) {
+            setTimeout(() => {
+                let random = Math.floor(Math.random() * liste.length)
+                for (let b = 0; b < liste.length; b++) {
+                    liste[b].change = false
+                }
+                liste[random].change = true
+                setItems(liste)
+                forceUpdate();
+                console.log(items);
+            }, parseInt(a) + "000");
+        }
     }
 
-    useEffect(() => {
-        document.getElementById(currentItem.id).classList.add("currentItem")
-        setCounter(prev => prev += 1)
-        console.log(counter)
-        if(counter === duration) {
-            clearInterval(intervalId)
-            setCounter(0)
-            document.getElementById(currentItem.id).classList.add("chosenOne")
-        }
-        return () => {
-            document.getElementById(currentItem.id).classList.remove("currentItem")
-        }
-    }, [currentItem])
 
-    useEffect(() => {
-        console.log(document.querySelectorAll('.edit input'))
-        document.querySelectorAll('.edit input').forEach(element => {
-            element.addEventListener("change", ({target}) => {
-                setItems(prev => {
-                    let item = items[_item(target.parentElement.parentElement.id)]
-                    item.value = target.value
-                    prev.splice(_item(item.id), 1, item)
-                    console.log(prev)
-                    console.log('test')
-                    console.log(items)
-                    return prev
-                })
-            })
-        });
-        return () => {
-            document.querySelectorAll('.edit input').forEach(element => {
-                element.removeEventListener("change", ({target}) => {
-                    console.log(target)
-                })
-            });        
+    const handleChangeInput = (event) => {
+        setInput(event.target.value)
+    }
+
+    const newElement = (event, i) => {
+        if (event.key === "Enter") {
+            let newItem = [...items];
+            newItem[i].value = input;
+
+            setItems(newItem)
+            setInput("");
         }
-    }, [items])
+    }
 
     const handleEdit = ({target}) => {
         let classes = [...target.classList]
@@ -80,14 +101,21 @@ function RandomiserContainer() {
         }   
     }
 
-    const handleChange = ({target}) => {
-        console.log(target)
-        target.style.color = 'green'
-    }
-
-    return (  
+    return (
         <div className="RandomiserContainer">
-            <Randomiser items={items} onEdit={handleEdit} onChange={handleChange}/>
+            {items.map((e, i) => {
+                return (
+                    <div key={i} className="Randomiser">
+                        <div className={`item ${e.change === true ? "bg-green" : ""}`} id={e.id}>
+                            <p>{e.value}</p>
+                            <div className={`edit`} onClick={handleEdit}>
+                                <i className="fas fa-marker"></i>
+                                <input type="text" value={input} onChange={handleChangeInput} onKeyPress={(event) => newElement(event, i)} />
+                            </div>
+                        </div>
+                    </div>
+                )
+            })}
             <button onClick={handleTrigger}>Let's Go !</button>
         </div>
     );

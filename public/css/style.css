@@ -210,6 +210,10 @@ p {
     transform: rotateY(360deg) rotateX(360deg);
   }
 }
+.bg-green {
+  background-color: green;
+}
+
 @font-face {
   font-family: "poppins";
   src: url("../../public/fonts/Poppins-Regular.ttf");
