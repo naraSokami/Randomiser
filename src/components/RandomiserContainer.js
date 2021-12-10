@@ -3,6 +3,11 @@ import Randomiser from './Randomiser'
 
 
 // UTIL //
+
+function _item(item) {
+    return parseInt(item.replace('item_', ''))
+}
+
 const itemsList = []
 for (let i = 0; i < 20; i++) {
     itemsList.push({id: 'item_' + i, value: 'item ' + i})
@@ -41,31 +46,38 @@ function RandomiserContainer() {
         }
     }, [currentItem])
 
+    useEffect(() => {
+        console.log(document.querySelectorAll('.edit input'))
+        document.querySelectorAll('.edit input').forEach(element => {
+            element.addEventListener("change", ({target}) => {
+                setItems(prev => {
+                    let item = items[_item(target.parentElement.parentElement.id)]
+                    item.value = target.value
+                    prev.splice(_item(item.id), 1, item)
+                    console.log(prev)
+                    console.log('test')
+                    console.log(items)
+                    return prev
+                })
+            })
+        });
+        return () => {
+            document.querySelectorAll('.edit input').forEach(element => {
+                element.removeEventListener("change", ({target}) => {
+                    console.log(target)
+                })
+            });        
+        }
+    }, [items])
+
     const handleEdit = ({target}) => {
         let classes = [...target.classList]
         let input;
         if (classes.includes('active')) {
             target.classList.remove('active')
-            target.removeChild(target.childNodes[1])
         } else {
             target.classList.add('active')
-            input = target.appendChild(document.createElement("Input"))   
-            input.addEventListener('change', ({target}) => {
-                console.log(target)
-                target.style.color = 'green'
-                console.log(target.parentElement.parentElement.id)
-                setItems(prev => {
-                    console.log(target.value)
-                    let returnedItem = prev.filter(item => item.id == target.parentElement.parentElement.id)
-                    let newArray = prev.filter(item => item.id != target.parentElement.parentElement.id)
-                    newArray.push(returnedItem[0])
-                    console.log(newArray)
-
-                    //creer un input de base
-                })
-            })
         }   
-        console.log(input)
     }
 
     const handleChange = ({target}) => {
@@ -78,7 +90,7 @@ function RandomiserContainer() {
             <Randomiser items={items} onEdit={handleEdit} onChange={handleChange}/>
             <button onClick={handleTrigger}>Let's Go !</button>
         </div>
-        );
+    );
 }
 
 export default RandomiserContainer;

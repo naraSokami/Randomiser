@@ -10,6 +10,7 @@ function Randomiser(props) {
                         <p>{value}</p>
                         <div className="edit" onClick={props.onEdit}>
                             <i class="fas fa-marker"></i>
+                            <input type="text" />
                         </div>
                     </div>
                 ))}
