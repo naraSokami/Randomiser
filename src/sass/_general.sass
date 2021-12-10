@@ -1,0 +1,208 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap')
+
+*
+    margin: 0
+    padding: 0
+    font-family: 'poppins', sans-serif
+
+body
+    width: 100%
+    height: 100vh
+    background: #181515
+    color: white
+    text-align: center
+
+h1, h2
+    margin-top: 50px
+    text-align: center
+    font-size: 4em
+
+h2
+    font-size: 3em
+
+p
+    padding: 20px 5%
+    letter-spacing: .5em
+    @include textX
+    background-image: $linear-2
+
+.option
+    text-align: start
+
+.funs
+    @include durum
+    gap: 40px
+
+.fun
+    width: 40px
+    height: 40px
+    perspective: 500px
+
+    .cube
+        @include taker
+        transform-style: preserve-3d
+        position: relative
+        animation: rotating 5s linear infinite
+
+        &:hover .side
+            width: 10px 
+            height: 10px
+                
+
+        .side
+            @include taker
+            transform-style: preserve-3d
+            position: absolute
+            background-image: $linear-2
+            transition-duration: 1s
+
+
+
+        .side:nth-of-type(6)
+            transform: rotateY(0deg) translateZ(20px)
+
+        .side:nth-of-type(1)
+            transform: rotateY(90deg) translateZ(20px)
+
+        .side:nth-of-type(2)
+            transform: rotateY(180deg) translateZ(20px)
+
+        .side:nth-of-type(3)
+            transform: rotateY(270deg) translateZ(20px)
+
+        .side:nth-of-type(4)
+            transform: rotateX(90deg) translateZ(20px)
+
+        .side:nth-of-type(5)
+            transform: rotateX(270deg) translateZ(20px)
+
+.Randomiser
+    @include durum
+    flex-wrap: wrap
+    padding: 0
+    
+
+.item
+    @include durum
+    width: 200px
+    height: 150px
+    transition-duration: .4s
+    position: relative
+    overflow: hidden
+
+    &:hover
+        background-image: $linear-2
+
+    &:hover p
+        background-image: linear-gradient(#fff, #fff)
+
+
+    .edit
+        @include durum
+        position: absolute
+        top: 5%
+        right: 5%
+        display: none
+        width: 40px
+        height: 40px
+        border-radius: 50%
+        transition-duration: .4s
+        transition-duration: 1s
+
+        i
+            top: 12px
+            right: 12px
+            position: absolute
+            pointer-events: none
+
+        input
+            position: absolute
+            left: 50px
+            height: 80%
+            top: 10%
+            width: 120px
+            border-radius: 10px
+            border: none
+            background-color: $light-ultra
+            padding-left: 10px
+            color: white
+
+            &:focus
+                outline: none
+
+        &:hover
+            background-image: linear-gradient(#fff, #fff)
+
+        &:hover i
+            @include textX
+            background-image: $linear-2
+
+    .edit.active
+        right: calc(100% - 50px)
+
+        &:hover
+            background-image: linear-gradient(#fff, #fff)
+
+        &:hover i
+            @include textX
+            background-image: $linear-2
+
+
+
+
+
+    &:hover .edit
+        display: inline-block
+
+
+
+.currentItem
+    background-image: $linear-2
+    color: white
+    font-weight: 550
+
+    p
+        background-image: linear-gradient(#fff, #fff)
+        color: white
+
+.item.chosenOne 
+    background-image: $linear-2
+    transition-duration: 3s
+    font-weight: 550
+    // width: 400px
+
+.RandomiserContainer
+    background-color: #0f0f0f
+    margin: 5%
+    padding: 5% 0
+    
+    button
+        width: 200px
+        height: 40px
+        margin: 40px 0
+        border-radius: 10px
+        border: 5px solid $red-1
+        background-image: $linear-2
+        -webkit-background-clip: border
+        color: white
+
+        &:hover
+            background-image: linear-gradient(#0f0f0f, #0f0f0f)
+
+
+
+
+
+
+
+
+
+
+@keyframes rotating
+    from
+        transform: rotateY(0deg) rotateX(0deg)
+
+    to
+        transform: rotateY(360deg) rotateX(360deg)
+
+
